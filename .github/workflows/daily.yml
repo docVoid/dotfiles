@@ -1,0 +1,32 @@
+name: DRM
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  contribute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: mmr andom commit
+        run: |
+          git config --global user.name "your-username"
+          git config --global user.email "your-email@example.com"
+
+          count=$((1 + RANDOM % 6))
+          echo "Generating $count contributions..."
+
+          for i in $(seq 1 $count); do
+            echo "Contribution $i at $(date)" >> sync-log.txt
+            git add sync-log.txt
+            git commit -m "contri $i on $(date)"
+            sleep $((RANDOM % 20 + 5))  # Sleep 5–25 sec to vary timestamps
+          done
+
+      - name: Push all commits
+        run: |
+          git push
