@@ -12,19 +12,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: mmr andom commit
+      - name: Make random commit(s)
         run: |
-          git config --global user.name "your-username"
-          git config --global user.email "your-email@example.com"
+          git config --global user.name "doc.Void"
+          git config --global user.email "81415427+docVoid@users.noreply.github.com"
 
           count=$((1 + RANDOM % 6))
-          echo "Generating $count contributions..."
+          day_of_month=$(date +%d)
+          echo "Generating $count contributions for day $day_of_month..."
 
           for i in $(seq 1 $count); do
-            echo "Contribution $i at $(date)" >> sync-log.txt
+            echo "Contribution $i on day $day_of_month at $(date)" >> sync-log.txt
             git add sync-log.txt
-            git commit -m "contri $i on $(date)"
-            sleep $((RANDOM % 20 + 5))  # Sleep 5–25 sec to vary timestamps
+            git commit -m "Contri of $day_of_month"
+            sleep $((RANDOM % 20 + 5))  # Sleep 5–25 sec
           done
 
       - name: Push all commits
