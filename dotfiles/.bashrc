@@ -1,2 +1,3 @@
 # Sample .bashrc
-alias ll='ls -la'
+alias ll='ls -lah'
+
