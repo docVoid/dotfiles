@@ -2,7 +2,7 @@ name: DRM
 
 on:
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "0 7 * * *"
   workflow_dispatch:
 
 jobs:
@@ -12,20 +12,44 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Make random commit(s)
+      - name: Make random commit(s) on weekdays only
         run: |
           git config --global user.name "doc.Void"
           git config --global user.email "81415427+docVoid@users.noreply.github.com"
 
+          weekday=$(date +%u)
+          if [ "$weekday" -gt 5 ]; then
+            echo "It's the weekend. Skipping contributions."
+            exit 0
+          fi
+
+          messages=(
+            "Refactored config structure"
+            "Improved development setup"
+            "Synced latest toolchain updates"
+            "Tuned shell environment variables"
+            "Cleaned up redundant snippets"
+            "Aligned settings with workspace"
+            "Updated VSCode keybindings"
+            "Optimized bash aliases"
+            "Documented useful CLI patterns"
+            "Updated .gitconfig parameters"
+          )
+
           count=$((1 + RANDOM % 6))
           day_of_month=$(date +%d)
+
           echo "Generating $count contributions for day $day_of_month..."
 
           for i in $(seq 1 $count); do
-            echo "Contribution $i on day $day_of_month at $(date)" >> sync-log.txt
+            echo "Log entry $i on day $day_of_month at $(date)" >> sync-log.txt
             git add sync-log.txt
-            git commit -m "Contri of $day_of_month"
-            sleep $((RANDOM % 20 + 5))  # Sleep 5–25 sec
+
+            index=$((RANDOM % 10))
+            commit_message="${messages[$index]} (Day $day_of_month)"
+
+            git commit -m "$commit_message"
+            sleep $((RANDOM % 20 + 5))
           done
 
       - name: Push all commits
